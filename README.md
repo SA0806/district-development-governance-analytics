@@ -1,131 +1,391 @@
 # District Development & Governance Analytics
 
-A data-driven governance prioritisation framework built using data from **NITI Aayog's Aspirational Districts Programme (ADP)**. The project identifies districts that are developmentally lagging, evaluates how quickly they are improving and turns those findings into targeted, actionable policy recommendations.
+An interactive data analytics platform for analysing India's Aspirational Districts using development-level and improvement-momentum data from NITI Aayog.
 
-<!-- 🚧 **Status:** Project under active development -->
+The project combines transparent policy segmentation, unsupervised machine learning, and interactive visualisation to identify districts that require prioritisation, districts showing strong improvement, and districts that can serve as benchmarks for peer learning.
 
 ---
 
 ## Table of Contents
 
-- [Objective](#objective)
-- [Key Questions](#key-questions)
-- [Methodology](#methodology)
-- [Data Source](#data-source)
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Analytical Framework](#analytical-framework)
+- [Machine Learning](#machine-learning)
+- [Policy Translation](#policy-translation)
+- [Dashboard](#dashboard)
 - [Project Structure](#project-structure)
+- [Data Pipeline](#data-pipeline)
 - [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-<!-- - [Roadmap](#roadmap) -->
-- [Contributing](#contributing)
+- [Installation](#installation)
+- [Running the Project](#running-the-project)
+- [Running the Analytical Pipeline](#running-the-analytical-pipeline)
+- [Example Findings](#example-findings)
+- [Limitations](#limitations)
+- [Future Improvements](#future-improvements)
+- [Data Sources](#data-sources)
+- [Why This Project?](#why-this-project)
+<!-- - [Author](#author) -->
 - [License](#license)
 
 ---
 
-## Objective
+## Overview
 
-To identify districts that are developmentally lagging, assess their improvement momentum and translate quantitative findings into targeted governance recommendations - helping policymakers prioritise attention and resources where they matter most.
+Governance decisions often require answering two questions:
 
-## Key Questions
+1. **How developed is a district currently?**
+2. **How quickly is the district improving?**
 
-- Which districts are performing poorly relative to the national aspirational-district cohort?
-- Which low-performing districts are improving rapidly?
-- Which districts are both low-performing **and** stagnant?
-- Which regions and sectors require greater policy attention?
+This project introduces a **Level–Momentum Framework** that analyses both dimensions simultaneously.
 
-## Methodology
+Each district is classified into one of four development profiles:
+
+| Profile | Interpretation |
+|---|---|
+| High Level / High Momentum | Strong development with strong improvement |
+| High Level / Low Momentum | Strong development but slowing improvement |
+| Low Level / High Momentum | Lower development but improving rapidly |
+| Critical Priority | Lower development with weak improvement |
+
+A secondary **K-Means clustering model** provides an independent, unsupervised segmentation of districts.
+
+## Key Features
+
+- Interactive district-level analytics dashboard
+- State and development-profile filters
+- Development Level vs Improvement Momentum scatter plot
+- Median-based Level–Momentum segmentation
+- K-Means clustering on standardised district indicators
+- Interpretable ML cluster profiles
+- National state-level priority analysis
+- Top momentum and lowest-development district analysis
+- District Explorer with individual recommendations
+- Policy-oriented recommendations based on analytical profiles
+
+## Analytical Framework
+
+### 1. Development Level
+
+The project uses the **NITI Aayog baseline composite score** (`baseline_score`) as the measure of development level.
+
+### 2. Improvement Momentum
+
+The project uses the corresponding **delta/improvement score** (`delta`) to represent improvement momentum.
+
+### 3. Level–Momentum Matrix
+
+The median values of the two variables are used as transparent thresholds:
+
+```text
+                         HIGH MOMENTUM
+                              │
+          Low Level /         │       High Level /
+          High Momentum       │       High Momentum
+                              │
+──────────────────────────────┼────────────────────────
+                              │
+          Critical            │       High Level /
+          Priority            │       Low Momentum
+                              │
+                         LOW MOMENTUM
+```
+
+This produces the four policy-oriented development profiles listed above.
+
+## Machine Learning
+
+K-Means clustering (`k=4`) is applied as a secondary, unsupervised segmentation technique using standardised `baseline_score` and `delta` values.
+
+### Pipeline
 
 ```
-Official NITI Aayog Data
-        ↓
-Data Cleaning & Normalisation
-        ↓
-Baseline + Delta Data Integration
-        ↓
-Level–Momentum Analysis
-        ↓
-K-Means Clustering
-        ↓
-District Segmentation
-        ↓
-Policy Recommendations
+Baseline Score + Momentum
+            ↓
+     Feature Standardisation
+            ↓
+        K-Means (k=4)
+            ↓
+     Cluster Identification
+            ↓
+ Meaningful Cluster Interpretation
 ```
 
-The core idea is a **level–momentum framework**: districts are scored both on their current performance *level* (how far behind they are) and their *momentum* (rate of improvement over time). Combining these two axes via K-Means clustering segments districts into actionable groups - for example, "low level, low momentum" districts that most urgently need intervention versus "low level, high momentum" districts that are already on the right track.
+Cluster centres are interpreted relative to the origin in standardised space and mapped to one of four labels:
 
-## Data Source
+- **Leading Accelerators**
+- **Established but Slowing**
+- **Lagging but Accelerating**
+- **Lagging & Stalled**
 
-- [NITI Aayog - Aspirational Districts Programme](https://www.niti.gov.in/aspirational-districts-programme)
+The clustering layer is used as an exploratory analytical tool rather than as a replacement for the transparent, median-based policy framework.
+
+## Policy Translation
+
+The analytical profiles are translated into governance-oriented recommendations. Examples:
+
+**Critical Priority**
+> Prioritise foundational service delivery, monitor leading indicators, and escalate persistent state-level bottlenecks.
+
+**Low Level / High Momentum**
+> Study successful implementation practices and identify interventions that can be replicated.
+
+**High Level / High Momentum**
+> Document best practices and use the district as a peer-learning benchmark.
+
+**High Level / Low Momentum**
+> Diagnose sector-specific bottlenecks and protect existing development gains.
+
+## Dashboard
+
+The Streamlit dashboard provides:
+
+**National Overview**
+- Total districts analysed
+- Critical Priority districts
+- High-momentum districts
+- States / UTs represented
+
+**Interactive Analysis**
+
+Users can filter districts by:
+- State
+- Development Profile
+
+The scatter plot dynamically updates based on the selected filters.
+
+**District Explorer**
+
+For an individual district, the dashboard displays:
+- State
+- Baseline development score
+- Improvement momentum
+- Baseline rank
+- Development profile
+- ML cluster profile
+- Policy recommendation
 
 ## Project Structure
 
 ```
 district-development-governance-analytics/
-├── data/          # Raw and processed NITI Aayog datasets
-├── docs/          # Documentation, notes and supporting material
-├── notebooks/     # Exploratory analysis and modelling notebooks
-├── src/           # Core source code (cleaning, analysis, clustering)
-├── app.py         # Streamlit dashboard application
-├── style.css      # Custom styling for the Streamlit app
+│
+├── app.py                        # Streamlit dashboard application
+├── style.css                     # Custom dashboard styling
 ├── requirements.txt
-└── README.md
+├── README.md
+│
+├── data/
+│   ├── baseline_ranking.csv      # district, state, baseline_score, baseline_rank
+│   └── delta_ranking.csv         # district, state, delta, delta_rank
+│
+├── src/
+│   ├── data_loader.py            # Loads baseline and delta CSVs
+│   ├── preprocessing.py          # Cleans district names and merges datasets
+│   ├── segmentation.py           # Level–Momentum quadrants + K-Means clustering
+│   ├── recommendations.py        # Maps development profiles to policy actions
+│   └── insights.py               # National/state-level summary statistics
+│
+├── notebooks/
+│   └── exploratory_analysis.ipynb
+│
+└── docs/
+    └── methodology.md
+```
+
+## Data Pipeline
+
+```
+NITI Aayog Data
+      │
+      ├── Baseline Ranking
+      │
+      └── Delta / Improvement Ranking
+               │
+               ▼
+        Data Loading
+               │
+               ▼
+       Data Preprocessing
+      (district name standardisation)
+               │
+               ▼
+      Dataset Alignment
+       (inner merge on district)
+               │
+               ▼
+    Level–Momentum Analysis
+               │
+        ┌──────┴──────┐
+        ▼             ▼
+   Quadrant Model   K-Means
+        │             │
+        └──────┬──────┘
+               ▼
+      Policy Recommendations
+               │
+               ▼
+      Interactive Dashboard
 ```
 
 ## Tech Stack
 
-- **Python**
-- **Pandas** & **NumPy** - data processing and manipulation
-- **Scikit-learn** - K-Means clustering and modelling
-- **Plotly** - interactive data visualisation
-- **Streamlit** - interactive web dashboard
+**Language**
+- Python
 
-## Getting Started
+**Data Analysis**
+- Pandas
+- NumPy
 
-### Prerequisites
+**Machine Learning**
+- Scikit-learn
+- K-Means Clustering
+- StandardScaler
 
-- Python 3.9+
-- pip
+**Visualisation**
+- Plotly
 
-### Installation
+**Dashboard**
+- Streamlit
+
+**Development**
+- Git
+- GitHub
+
+## Installation
+
+Clone the repository:
 
 ```bash
-# Clone the repository
 git clone https://github.com/SA0806/district-development-governance-analytics.git
+```
+
+Move into the project directory:
+
+```bash
 cd district-development-governance-analytics
+```
 
-# (Optional) create a virtual environment
+Create a virtual environment:
+
+```bash
 python -m venv venv
-source venv/bin/activate    # On Windows: venv\Scripts\activate
+```
 
-# Install dependencies
+Activate it:
+
+```bash
+# On Windows
+venv\Scripts\activate
+
+# On macOS/Linux
+source venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
 ```
 
-## Usage
+## Running the Project
 
-Run the Streamlit dashboard locally:
+Run the Streamlit dashboard:
 
 ```bash
 streamlit run app.py
 ```
 
-This launches an interactive app where you can explore district-level performance, momentum scores and cluster segmentation.
+The application will open in your browser.
 
-Analysis notebooks used for exploration and model development are available in the [`notebooks/`](notebooks) directory.
+## Running the Analytical Pipeline
 
-<!-- ## Roadmap
+Each module in `src/` can also be run independently for inspection, from the project root, with `src` on the Python path:
 
-- [ ] Finalise data cleaning and normalisation pipeline
-- [ ] Validate clustering approach across sectors (health, education, agriculture, infrastructure)
-- [ ] Expand policy recommendation logic
-- [ ] Polish and deploy the Streamlit dashboard
-- [ ] Add automated tests and documentation -->
+**Data Loading**
+```bash
+PYTHONPATH=src python src/data_loader.py
+```
 
-## Contributing
+**Preprocessing**
+```bash
+PYTHONPATH=src python src/preprocessing.py
+```
 
-Contributions, issues and feature requests are welcome. Feel free to open an issue or submit a pull request.
+**Segmentation and Clustering**
+```bash
+PYTHONPATH=src python src/segmentation.py
+```
 
+**Policy Recommendations**
+```bash
+PYTHONPATH=src python src/recommendations.py
+```
 
----
+**Analytical Insights**
+```bash
+PYTHONPATH=src python src/insights.py
+```
 
-*Built to support evidence-based governance and policy prioritisation across India's aspirational districts.*
+*(On Windows, set the path first with `set PYTHONPATH=src`.)*
+
+## Example Findings
+
+Running the pipeline on the included datasets produces:
+
+- **101** districts analysed
+- **31** districts classified as **Critical Priority**
+- **51** districts with above-median improvement momentum
+- **25** states / UTs represented
+- Median baseline score: **35.42** · Median momentum (delta): **5.7**
+
+Critical Priority districts are geographically concentrated — **Jharkhand (11)** and **Bihar (8)** together account for over 60% of identified priority districts, followed by Assam and Uttar Pradesh (4 each).
+
+The districts with the strongest improvement momentum (Dahod, West Sikkim, Ramanathapuram, Vizianagaram, and Cuddapah/YSR Kadapa) illustrate the framework's second use case: surfacing districts whose implementation practices may be worth studying and replicating elsewhere.
+
+## Limitations
+
+- The analysis is based on the two publicly available baseline and delta ranking datasets; it does not incorporate sector-level indicators individually.
+- The Level–Momentum framework uses median thresholds, which provide transparency but may simplify underlying development dynamics.
+- K-Means results depend on the selected features and number of clusters (`k=4` was chosen for interpretability, not statistically optimised).
+- Cluster labels are analytical interpretations, not official government classifications.
+- Policy recommendations are analytical suggestions and should be validated against local administrative, socioeconomic, and sector-specific context.
+- The project does not claim causal relationships between interventions and development outcomes.
+
+## Future Improvements
+
+- Sector-level analysis across health, education, agriculture, and financial inclusion
+- Time-series monitoring of district performance
+- State-level comparative dashboards
+- Geospatial district visualisation
+- Automated policy brief generation
+- Additional clustering and dimensionality-reduction techniques
+- Integration of newer Aspirational District datasets
+- Deployment as a public-facing governance analytics platform
+
+## Data Sources
+
+The project uses district-level data published by NITI Aayog's Aspirational Districts Programme, including baseline development scores and improvement/delta rankings.
+
+The datasets used in this repository are included under [`data/`](data).
+
+Source reports should be referenced alongside the corresponding datasets when reproducing the analysis.
+
+## Why This Project?
+
+The project was designed to combine:
+
+**Data → Diagnosis → Segmentation → Insight → Policy Recommendation**
+
+rather than treating data visualisation as the final output.
+
+The goal is to demonstrate how quantitative analysis and machine learning can support structured governance and development decision-making.
+
+<!-- ## Author
+
+**Sahiba Joshi**
+Mechanical Engineering | IIT Indore -->
+
+## License
+
+This project is intended for educational, analytical, and portfolio purposes.

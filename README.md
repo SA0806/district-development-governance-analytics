@@ -16,7 +16,7 @@ A data-driven governance prioritisation framework built using data from **NITI A
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
-- [Roadmap](#roadmap)
+<!-- - [Roadmap](#roadmap) -->
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -113,13 +113,13 @@ This launches an interactive app where you can explore district-level performanc
 
 Analysis notebooks used for exploration and model development are available in the [`notebooks/`](notebooks) directory.
 
-## Roadmap
+<!-- ## Roadmap
 
 - [ ] Finalise data cleaning and normalisation pipeline
 - [ ] Validate clustering approach across sectors (health, education, agriculture, infrastructure)
 - [ ] Expand policy recommendation logic
 - [ ] Polish and deploy the Streamlit dashboard
-- [ ] Add automated tests and documentation
+- [ ] Add automated tests and documentation -->
 
 ## Contributing
 

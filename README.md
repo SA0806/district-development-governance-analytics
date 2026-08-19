@@ -2,7 +2,7 @@
 
 An interactive data analytics platform for analysing India's Aspirational Districts using development-level and improvement-momentum data from NITI Aayog.
 
-The project combines transparent policy segmentation, unsupervised machine learning, and interactive visualisation to identify districts that require prioritisation, districts showing strong improvement, and districts that can serve as benchmarks for peer learning.
+The project combines transparent policy segmentation, unsupervised machine learning and interactive visualisation to identify districts that require prioritisation, districts showing strong improvement and districts that can serve as benchmarks for peer learning.
 
 ---
 
@@ -25,7 +25,6 @@ The project combines transparent policy segmentation, unsupervised machine learn
 - [Future Improvements](#future-improvements)
 - [Data Sources](#data-sources)
 - [Why This Project?](#why-this-project)
-<!-- - [Author](#author) -->
 - [License](#license)
 
 ---
@@ -37,15 +36,15 @@ Governance decisions often require answering two questions:
 1. **How developed is a district currently?**
 2. **How quickly is the district improving?**
 
-This project introduces a **Level–Momentum Framework** that analyses both dimensions simultaneously.
+This project introduces a **Level-Momentum Framework** that analyses both dimensions simultaneously.
 
 Each district is classified into one of four development profiles:
 
 | Profile | Interpretation |
 |---|---|
-| High Level / High Momentum | Strong development with strong improvement |
-| High Level / Low Momentum | Strong development but slowing improvement |
-| Low Level / High Momentum | Lower development but improving rapidly |
+| High Level/ High Momentum | Strong development with strong improvement |
+| High Level/ Low Momentum | Strong development but slowing improvement |
+| Low Level/ High Momentum | Lower development but improving rapidly |
 | Critical Priority | Lower development with weak improvement |
 
 A secondary **K-Means clustering model** provides an independent, unsupervised segmentation of districts.
@@ -55,7 +54,7 @@ A secondary **K-Means clustering model** provides an independent, unsupervised s
 - Interactive district-level analytics dashboard
 - State and development-profile filters
 - Development Level vs Improvement Momentum scatter plot
-- Median-based Level–Momentum segmentation
+- Median-based Level-Momentum segmentation
 - K-Means clustering on standardised district indicators
 - Interpretable ML cluster profiles
 - National state-level priority analysis
@@ -73,14 +72,14 @@ The project uses the **NITI Aayog baseline composite score** (`baseline_score`) 
 
 The project uses the corresponding **delta/improvement score** (`delta`) to represent improvement momentum.
 
-### 3. Level–Momentum Matrix
+### 3. Level-Momentum Matrix
 
 The median values of the two variables are used as transparent thresholds:
 
 ```text
                          HIGH MOMENTUM
                               │
-          Low Level /         │       High Level /
+          Low Level/         │       High Level /
           High Momentum       │       High Momentum
                               │
 ──────────────────────────────┼────────────────────────
@@ -125,15 +124,15 @@ The clustering layer is used as an exploratory analytical tool rather than as a 
 The analytical profiles are translated into governance-oriented recommendations. Examples:
 
 **Critical Priority**
-> Prioritise foundational service delivery, monitor leading indicators, and escalate persistent state-level bottlenecks.
+> Prioritise foundational service delivery, monitor leading indicators and escalate persistent state-level bottlenecks.
 
-**Low Level / High Momentum**
+**Low Level/ High Momentum**
 > Study successful implementation practices and identify interventions that can be replicated.
 
-**High Level / High Momentum**
+**High Level/ High Momentum**
 > Document best practices and use the district as a peer-learning benchmark.
 
-**High Level / Low Momentum**
+**High Level/ Low Momentum**
 > Diagnose sector-specific bottlenecks and protect existing development gains.
 
 ## Dashboard
@@ -144,7 +143,7 @@ The Streamlit dashboard provides:
 - Total districts analysed
 - Critical Priority districts
 - High-momentum districts
-- States / UTs represented
+- States/ UTs represented
 
 **Interactive Analysis**
 
@@ -182,7 +181,7 @@ district-development-governance-analytics/
 ├── src/
 │   ├── data_loader.py            # Loads baseline and delta CSVs
 │   ├── preprocessing.py          # Cleans district names and merges datasets
-│   ├── segmentation.py           # Level–Momentum quadrants + K-Means clustering
+│   ├── segmentation.py           # Level-Momentum quadrants + K-Means clustering
 │   ├── recommendations.py        # Maps development profiles to policy actions
 │   └── insights.py               # National/state-level summary statistics
 │
@@ -200,7 +199,7 @@ NITI Aayog Data
       │
       ├── Baseline Ranking
       │
-      └── Delta / Improvement Ranking
+      └── Delta/ Improvement Ranking
                │
                ▼
         Data Loading
@@ -214,7 +213,7 @@ NITI Aayog Data
        (inner merge on district)
                │
                ▼
-    Level–Momentum Analysis
+    Level-Momentum Analysis
                │
         ┌──────┴──────┐
         ▼             ▼
@@ -336,25 +335,25 @@ Running the pipeline on the included datasets produces:
 - **101** districts analysed
 - **31** districts classified as **Critical Priority**
 - **51** districts with above-median improvement momentum
-- **25** states / UTs represented
+- **25** states/ UTs represented
 - Median baseline score: **35.42** · Median momentum (delta): **5.7**
 
 Critical Priority districts are geographically concentrated — **Jharkhand (11)** and **Bihar (8)** together account for over 60% of identified priority districts, followed by Assam and Uttar Pradesh (4 each).
 
-The districts with the strongest improvement momentum (Dahod, West Sikkim, Ramanathapuram, Vizianagaram, and Cuddapah/YSR Kadapa) illustrate the framework's second use case: surfacing districts whose implementation practices may be worth studying and replicating elsewhere.
+The districts with the strongest improvement momentum (Dahod, West Sikkim, Ramanathapuram, Vizianagaram and Cuddapah/YSR Kadapa) illustrate the framework's second use case: surfacing districts whose implementation practices may be worth studying and replicating elsewhere.
 
 ## Limitations
 
 - The analysis is based on the two publicly available baseline and delta ranking datasets; it does not incorporate sector-level indicators individually.
-- The Level–Momentum framework uses median thresholds, which provide transparency but may simplify underlying development dynamics.
+- The Level-Momentum framework uses median thresholds, which provide transparency but may simplify underlying development dynamics.
 - K-Means results depend on the selected features and number of clusters (`k=4` was chosen for interpretability, not statistically optimised).
 - Cluster labels are analytical interpretations, not official government classifications.
-- Policy recommendations are analytical suggestions and should be validated against local administrative, socioeconomic, and sector-specific context.
+- Policy recommendations are analytical suggestions and should be validated against local administrative, socioeconomic and sector-specific context.
 - The project does not claim causal relationships between interventions and development outcomes.
 
 ## Future Improvements
 
-- Sector-level analysis across health, education, agriculture, and financial inclusion
+- Sector-level analysis across health, education, agriculture and financial inclusion
 - Time-series monitoring of district performance
 - State-level comparative dashboards
 - Geospatial district visualisation
@@ -388,4 +387,4 @@ Mechanical Engineering | IIT Indore -->
 
 ## License
 
-This project is intended for educational, analytical, and portfolio purposes.
+This project is intended for educational, analytical and portfolio purposes.
